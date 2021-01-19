@@ -1,0 +1,14 @@
+package com.lampa.skeleton.view.activity.main
+
+import android.os.Bundle
+import com.lampa.skeleton.R
+import com.lampa.skeleton.view.base.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class MainActivity: BaseActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+    }
+}
