@@ -1,7 +1,7 @@
-package com.lampa.skeleton.data.repository
+package com.lampa.skeleton.repository
 
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.lampa.skeleton.data.repository.DataRepository.PreferencesKey.USER_ID
+import com.lampa.skeleton.repository.DataRepository.PreferencesKey.USER_ID
 import com.lampa.skeleton.util.DataStoreManager
 import javax.inject.Inject
 

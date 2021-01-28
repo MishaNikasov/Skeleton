@@ -1,6 +1,6 @@
-package com.lampa.skeleton.data.model.network.post
+package com.lampa.skeleton.data.domain.post
 
-data class PostNetworkEntity(
+data class Post (
     var id: Int,
     var body: String,
     var title: String,

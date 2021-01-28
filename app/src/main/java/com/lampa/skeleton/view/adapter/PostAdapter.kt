@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-import com.lampa.skeleton.data.model.domain.post.Post
+import com.lampa.skeleton.data.domain.post.Post
 import com.lampa.skeleton.databinding.ItemPostBinding
 import javax.inject.Inject
 

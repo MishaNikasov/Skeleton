@@ -6,7 +6,7 @@
 
         <variable
             name="post"
-            type="com.lampa.skeleton.data.model.domain.post.Post" />
+            type="com.lampa.skeleton.data.domain.post.Post" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

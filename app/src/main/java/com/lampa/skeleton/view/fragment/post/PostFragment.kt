@@ -4,19 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lampa.skeleton.R
-import com.lampa.skeleton.data.model.domain.post.Post
-import com.lampa.skeleton.data.network.PostApi
 import com.lampa.skeleton.databinding.FragmentPostBinding
-import com.lampa.skeleton.util.DataState
+import com.lampa.skeleton.util.UiState
 import com.lampa.skeleton.view.adapter.PostAdapter
 import com.lampa.skeleton.view.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,7 +42,19 @@ class PostFragment : BaseFragment() {
 
         setupUi()
         loadData()
+        setupState()
         setupViewModelCallbacks()
+    }
+
+    private fun setupState() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiState.collect { state ->
+                when (state) {
+                    is UiState.Loading -> /** binding.progressPlaceholder.isVisible = **/ state.inProgress
+                    is UiState.Error -> /** showToast() **/ state.exception.localizedMessage
+                }
+            }
+        }
     }
 
     private fun setupUi() {
@@ -65,18 +75,8 @@ class PostFragment : BaseFragment() {
 
     private fun setupViewModelCallbacks() {
         viewModel.apply {
-            postState.observe(viewLifecycleOwner, { state ->
-                when (state) {
-                    is DataState.Loading -> {
-                        binding.progressPlaceholder.root.isVisible = state.inProgress
-                    }
-                    is DataState.Success<List<Post>> -> {
-                        postAdapter.submitList(state.data)
-                    }
-                    is DataState.Error -> {
-                        displayError(state.exception)
-                    }
-                }
+            postList.observe(viewLifecycleOwner, {
+                postAdapter.submitList(it)
             })
         }
     }

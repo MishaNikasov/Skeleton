@@ -1,7 +1,7 @@
 package com.lampa.skeleton.data.mapper
 
-import com.lampa.skeleton.data.model.domain.post.Post
-import com.lampa.skeleton.data.model.network.post.PostNetworkEntity
+import com.lampa.skeleton.data.domain.post.Post
+import com.lampa.skeleton.data.network.model.post.PostNetworkEntity
 import javax.inject.Inject
 
 class NetworkMapper
