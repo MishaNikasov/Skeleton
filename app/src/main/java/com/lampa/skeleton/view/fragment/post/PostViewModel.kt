@@ -11,6 +11,7 @@ import com.lampa.skeleton.util.UiState
 import com.lampa.skeleton.view.base.BaseViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import okhttp3.Dispatcher
 import timber.log.Timber
 import kotlin.system.measureTimeMillis
 
@@ -22,10 +23,13 @@ class PostViewModel @ViewModelInject constructor(
     //TODO: connection handler
 
     val postList = MutableLiveData<List<Post>>()
+    private var repeatableJob: Job? = null
+    private var repeatCounter = 0
 
+    val requestText = MutableLiveData<String>()
     init {
-        singleRequest()
-        handleParallelRequest()
+//        singleRequest()
+//        handleParallelRequest()
 //        sequentialRequest()
     }
 
@@ -34,7 +38,11 @@ class PostViewModel @ViewModelInject constructor(
             _uiState.value = UiState.Loading(true)
             postRepository.getPostList().collect { state ->
                 when (state) {
-                    is DataState.Success -> postList.postValue(state.data)
+                    is DataState.Success -> {
+                        repeatCounter += 1
+                        requestText.postValue("Repeat count: $repeatCounter")
+//                        postList.postValue(state.data)
+                    }
                     is DataState.Error -> _uiState.value = UiState.Error(state.exception)
                 }
             }
@@ -106,5 +114,18 @@ class PostViewModel @ViewModelInject constructor(
             }
             Timber.d("Total time: $time")
         }
+    }
+
+    fun repeatableRequest(delay: Long) {
+        repeatableJob = viewModelScope.launch (Dispatchers.IO) {
+            repeat(10) {
+                delay(delay)
+                singleRequest()
+            }
+        }
+    }
+
+    fun stopRepeating() {
+        repeatableJob?.cancel()
     }
 }

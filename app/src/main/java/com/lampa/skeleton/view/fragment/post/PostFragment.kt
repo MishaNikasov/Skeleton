@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +15,7 @@ import com.lampa.skeleton.util.UiState
 import com.lampa.skeleton.view.adapter.PostAdapter
 import com.lampa.skeleton.view.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
@@ -41,7 +43,6 @@ class PostFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupUi()
-        loadData()
         setupState()
         setupViewModelCallbacks()
     }
@@ -50,7 +51,7 @@ class PostFragment : BaseFragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { state ->
                 when (state) {
-                    is UiState.Loading -> /** binding.progressPlaceholder.isVisible = **/ state.inProgress
+                    is UiState.Loading -> binding.progressPlaceholder.isVisible = state.inProgress
                     is UiState.Error -> /** showToast() **/ state.exception.localizedMessage
                 }
             }
@@ -59,6 +60,12 @@ class PostFragment : BaseFragment() {
 
     private fun setupUi() {
         setupRecycler()
+        binding.btn1.setOnClickListener {
+            viewModel.repeatableRequest()
+        }
+        binding.btn2.setOnClickListener {
+            viewModel.stopRepeating()
+        }
     }
 
     private fun setupRecycler() {
@@ -67,10 +74,6 @@ class PostFragment : BaseFragment() {
             this.layoutManager = layoutManager
             this.adapter = postAdapter
         }
-    }
-
-    private fun loadData() {
-
     }
 
     private fun setupViewModelCallbacks() {
