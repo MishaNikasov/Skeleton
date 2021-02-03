@@ -116,7 +116,7 @@ class PostViewModel @ViewModelInject constructor(
         }
     }
 
-    fun repeatableRequest(delay: Long) {
+    fun repeatableRequest(delay: Long = 1000) {
         repeatableJob = viewModelScope.launch (Dispatchers.IO) {
             repeat(10) {
                 delay(delay)
